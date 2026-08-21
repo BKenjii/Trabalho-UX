@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Michael Jackson — Catálogo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1B1230;
+    --surface:#241A3D;
+    --surface-2:#2E2150;
+    --lime:#C8FF4D;
+    --coral:#FF6B5B;
+    --orange:#FF9640;
+    --cream:#FBF7F0;
+    --muted:#9C8FC0;
+    --line:#3B2C63;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 40px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    z-index:30;
+    background:var(--bg);
+  }
+  .logo{
+    font-family:'Baloo 2',sans-serif;
+    font-weight:800;
+    font-size:22px;
+  }
+  .logo span{color:var(--lime);}
+  nav{display:flex; gap:24px; align-items:center;}
+  .nav-link{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    font-weight:500;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .nav-link.active{color:var(--cream);}
+  .cart-badge{
+    background:var(--coral);
+    color:var(--bg);
+    font-weight:600;
+    font-size:12px;
+    padding:2px 8px;
+    border-radius:20px;
+  }
+  main{
+    max-width:1100px;
+    margin:0 auto;
+    padding:40px 40px 160px;
+  }
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .page-title{
+    font-family:'Baloo 2',sans-serif;
+    font-size:30px;
+    margin:0 0 6px;
+  }
+  .page-sub{
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:36px;
+  }
+
+  /* ---- CATALOG (horizontal) ---- */
+  #product-list{
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    padding-bottom:20px;
+    scrollbar-width:thin;
+    scrollbar-color:var(--line) transparent;
+  }
+  #product-list::-webkit-scrollbar{
+    height:5px;
+  }
+  #product-list::-webkit-scrollbar-track{
+    background:transparent;
+  }
+  #product-list::-webkit-scrollbar-thumb{
+    background:var(--line);
+    border-radius:10px;
+  }
+  #product-list::-webkit-scrollbar-thumb:hover{
+    background:var(--muted);
+  }
+  .product-row{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:18px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:34px 26px 26px;
+    position:relative;
+    flex:0 0 240px;
+  }
+  .court-line{
+    position:absolute;
+    bottom:14px;
+    left:20px;
+    right:20px;
+    height:0;
+    border-bottom:2px dashed var(--line);
+  }
+  .ball-slot{
+    width:86px;
+    height:86px;
+    flex-shrink:0;
+    position:relative;
+  }
+  .ball{
+    width:86px;
+    height:86px;
+    border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #ffffff, #f2f0f6 60%, #d9d5e4 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:36px;
+    cursor:grab;
+    box-shadow:0 6px 14px rgba(0,0,0,0.35);
+    position:relative;
+    touch-action:none;
+  }
+
+  .ball.dragging{
+    cursor:grabbing;
+    z-index:100;
+    position:fixed;
+  }
+  .ball.flying{
+    position:fixed;
+    z-index:100;
+  }
+  .ball.hidden-slot{opacity:0; pointer-events:none;}
+
+  .p-name{font-weight:600; font-size:16px;}
+  .p-price{color:var(--lime); font-weight:600; font-size:15px;}
+  .p-hint{color:var(--muted); font-size:11px; margin-top:2px;}
+
+  /* ---- FIXED HOOP ---- */
+  .hoop-wrap{
+    position:fixed;
+    top:100px;
+    right:36px;
+    width:270px;
+    z-index:20;
+    text-align:center;
+    pointer-events:none;
+  }
+  .hoop-svg{width:100%; display:block;}
+  .hoop-label{
+    font-size:11px;
+    color:var(--muted);
+    margin-top:4px;
+  }
+  .score-flash{
+    position:absolute;
+    top:-10px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--lime);
+    color:#1B1230;
+    font-weight:700;
+    font-size:12px;
+    padding:4px 10px;
+    border-radius:20px;
+    opacity:0;
+    transition:opacity 0.2s, transform 0.3s;
+  }
+  .score-flash.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(-14px);
+  }
+
+  .toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-14px);
+    background:var(--coral);
+    color:var(--cream);
+    font-weight:600;
+    font-size:14px;
+    padding:8px 18px;
+    border-radius:30px;
+    opacity:0;
+    transition:opacity 0.25s, transform 0.25s;
+    z-index:200;
+    white-space:nowrap;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* ---- MINI CART SUMMARY (bottom right) ---- */
+  .mini-cart{
+    position:fixed;
+    bottom:28px;
+    right:28px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    z-index:25;
+    cursor:pointer;
+    transition:transform 0.15s, border-color 0.15s;
+  }
+  .mini-cart:hover{
+    border-color:var(--border-strong, var(--line));
+    transform:translateY(-2px);
+  }
+  .mini-cart-icon{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:var(--surface-2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    position:relative;
+    flex-shrink:0;
+  }
+  .mini-cart-count{
+    position:absolute;
+    top:-6px;
+    right:-6px;
+    background:var(--coral);
+    color:var(--bg);
+    font-size:10px;
+    font-weight:700;
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .mini-cart-text{text-align:left;}
+  .mini-cart-label{font-size:11px; color:var(--muted); line-height:1.3;}
+  .mini-cart-value{font-size:15px; font-weight:600; color:var(--cream); line-height:1.3;}
+
+  .rule-box{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 20px;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.6;
+    margin-bottom:30px;
+  }
+  .rule-box b{color:var(--cream);}
+
+  /* ---- CART VIEW ---- */
+  .cart-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-bottom:30px;
+  }
+  .cart-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 20px;
+  }
+  .cart-item-left{display:flex; align-items:center; gap:16px;}
+  .cart-icon{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:radial-gradient(circle at 32% 28%, #ffb066, var(--orange) 60%, #d9711f 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+  }
+  .cart-name{font-weight:600; font-size:15px;}
+  .cart-sub{font-size:13px; color:var(--muted); margin-top:2px;}
+  .qty-controls{display:flex; align-items:center; gap:10px;}
+  .qty-btn{
+    width:28px; height:28px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--surface-2);
+    color:var(--cream);
+    cursor:pointer;
+    font-size:15px;
+    line-height:1;
+  }
+  .empty-cart{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--muted);
+  }
+  .summary{
+    border-top:1px solid var(--line);
+    padding-top:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .total-label{color:var(--muted); font-size:14px;}
+  .total-value{font-family:'Baloo 2',sans-serif; font-size:26px; font-weight:700; color:var(--lime);}
+  .checkout-btn{
+    background:var(--lime);
+    color:#1B1230;
+    border:none;
+    padding:14px 26px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    margin-top:20px;
+    width:100%;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">michael <span>jackson</span></div>
+  <nav>
+    <button class="nav-link active" id="nav-catalog" onclick="showView('catalog')">Catálogo</button>
+    <button class="nav-link" id="nav-cart" onclick="showView('cart')">
+      Carrinho <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+  </nav>
+</header>
+
+<div class="hoop-wrap" id="hoop">
+  <div class="score-flash" id="score-flash">Cesta!</div>
+  <svg class="hoop-svg" viewBox="0 0 210 170">
+    <rect x="30" y="4" width="110" height="70" rx="6" fill="#2E2150" stroke="#C8FF4D" stroke-width="3"/>
+    <rect x="52" y="20" width="66" height="40" fill="none" stroke="#C8FF4D" stroke-width="2"/>
+    <ellipse cx="85" cy="80" rx="48" ry="11" fill="none" stroke="#FF9640" stroke-width="6"/>
+    <path d="M42 84 L52 144 M62 84 L68 146 M85 86 L85 150 M108 84 L102 146 M128 84 L118 144" stroke="#3B2C63" stroke-width="2" fill="none"/>
+  </svg>
+  <div class="hoop-label">acerte a cesta</div>
+</div>
+
+<div class="toast" id="toast">Não foi dessa vez!</div>
+
+<div class="mini-cart" id="mini-cart" onclick="showView('cart')">
+  <div class="mini-cart-icon">
+    🛒
+    <span class="mini-cart-count" id="mini-cart-count">0</span>
+  </div>
+  <div class="mini-cart-text">
+    <div class="mini-cart-label">carrinho</div>
+    <div class="mini-cart-value" id="mini-cart-value">R$ 0,00</div>
+  </div>
+</div>
+
+<main>
+
+  <!-- CATALOG VIEW -->
+  <div class="view active" id="view-catalog">
+    <h1 class="page-title">Catálogo</h1>
+    <div class="page-sub">arraste a bola pra trás, mire na cesta e solte para adicionar o produto</div>
+
+    <div class="rule-box">
+      <b>Como funciona:</b> clique na bola de cada produto, puxe no sentido contrário à cesta
+      (efeito estilingue) e solte. Quanto mais precisa a mira, maior a chance de acertar.
+    </div>
+
+    <div id="product-list"></div>
+  </div>
+
+  <!-- CART VIEW -->
+  <div class="view" id="view-cart">
+    <h2 class="page-title">Seu carrinho</h2>
+    <div id="cart-content"></div>
+  </div>
+
+</main>
+
+<script>
+const products = [
+  { id: 'tenis', name: 'Tênis Voltz Runner', price: 349.90, icon: '👟' },
+  { id: 'bone', name: 'Boné Aero Cap', price: 89.90, icon: '🧢' },
+  { id: 'garrafa', name: 'Garrafa Flux 1L', price: 59.90, icon: '🍶' },
+  { id: 'mochila', name: 'Mochila Zen 20L', price: 219.90, icon: '🎒' },
+  { id: 'fone', name: 'Fone Loop Wireless', price: 279.90, icon: '🎧' }
+];
+
+let cart = {};
+
+const listEl = document.getElementById('product-list');
+products.forEach(p => {
+  const row = document.createElement('div');
+  row.className = 'product-row';
+  row.innerHTML = `
+    <div class="court-line"></div>
+    <div class="ball-slot">
+      <div class="ball" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-icon="${p.icon}">${p.icon}</div>
+    </div>
+    <div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-price">R$ ${p.price.toFixed(2).replace('.', ',')}</div>
+      <div class="p-hint">puxe a bola e solte para arremessar</div>
+    </div>
+  `;
+  listEl.appendChild(row);
+});
+
+const hoop = document.getElementById('hoop');
+const toast = document.getElementById('toast');
+const scoreFlash = document.getElementById('score-flash');
+
+let dragState = null;
+const GRAVITY = 1100; // px/s^2
+const POWER = 3.6;
+const MIN_DRAG = 10;
+
+document.addEventListener('mousedown', (e) => {
+  const ball = e.target.closest('.ball');
+  if(!ball || ball.classList.contains('flying')) return;
+  const rect = ball.getBoundingClientRect();
+  dragState = {
+    ball,
+    slotRect: rect,
+    startX: e.clientX,
+    startY: e.clientY,
+    offsetX: e.clientX - rect.left,
+    offsetY: e.clientY - rect.top
+  };
+  ball.classList.add('dragging');
+  ball.style.width = rect.width + 'px';
+  ball.style.height = rect.height + 'px';
+  ball.style.left = rect.left + 'px';
+  ball.style.top = rect.top + 'px';
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', (e) => {
+  if(!dragState) return;
+  const { ball, offsetX, offsetY } = dragState;
+  ball.style.left = (e.clientX - offsetX) + 'px';
+  ball.style.top = (e.clientY - offsetY) + 'px';
+});
+
+document.addEventListener('mouseup', (e) => {
+  if(!dragState) return;
+  const { ball, startX, startY, slotRect } = dragState;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  const dragDist = Math.sqrt(dx*dx + dy*dy);
+
+  ball.classList.remove('dragging');
+
+  if(dragDist < MIN_DRAG){
+    ball.style.position = '';
+    ball.style.left = '';
+    ball.style.top = '';
+    ball.style.width = '';
+    ball.style.height = '';
+    dragState = null;
+    return;
+  }
+
+  const vx = -dx * POWER;
+  const vy = -dy * POWER;
+
+  launchBall(ball, slotRect, vx, vy);
+  dragState = null;
+});
+
+function launchBall(ball, originRect, vx, vy){
+  ball.classList.add('flying');
+  let x = originRect.left;
+  let y = originRect.top;
+  let velX = vx;
+  let velY = vy;
+  let scored = false;
+  let lastTime = performance.now();
+  const floorY = window.innerHeight + 100;
+
+  function frame(now){
+    const dt = Math.min((now - lastTime) / 1000, 0.032);
+    lastTime = now;
+
+    velY += GRAVITY * dt;
+    x += velX * dt;
+    y += velY * dt;
+
+    ball.style.left = x + 'px';
+    ball.style.top = y + 'px';
+
+    const hoopRect = hoop.getBoundingClientRect();
+    const ballCx = x + originRect.width/2;
+    const ballCy = y + originRect.height/2;
+    const hoopCx = hoopRect.left + hoopRect.width/2;
+    const hoopCy = hoopRect.top + 102;
+
+    const distX = Math.abs(ballCx - hoopCx);
+    const distY = Math.abs(ballCy - hoopCy);
+
+    if(!scored && velY > 0 && distX < 85 && distY < 60){
+      scored = true;
+      score(ball);
+      return;
+    }
+
+    if(y > floorY){
+      miss(ball, originRect);
+      return;
+    }
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+function score(ball){
+  ball.style.transition = 'transform 0.2s, opacity 0.2s';
+  ball.style.transform = 'scale(0.3)';
+  ball.style.opacity = '0';
+
+  scoreFlash.textContent = 'Cesta!';
+  scoreFlash.classList.add('show');
+  setTimeout(() => scoreFlash.classList.remove('show'), 700);
+
+  addToCart(ball.dataset.name, parseFloat(ball.dataset.price), ball.dataset.icon);
+
+  setTimeout(() => resetBall(ball), 250);
+}
+
+function miss(ball, originRect){
+  showToast('Não foi dessa vez! Tente de novo.');
+  ball.style.transition = 'opacity 0.25s';
+  ball.style.opacity = '0';
+  setTimeout(() => resetBall(ball), 250);
+}
+
+function resetBall(ball){
+  ball.classList.remove('flying');
+  ball.style.transition = '';
+  ball.style.transform = '';
+  ball.style.opacity = '';
+  ball.style.position = '';
+  ball.style.left = '';
+  ball.style.top = '';
+  ball.style.width = '';
+  ball.style.height = '';
+}
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 1300);
+}
+
+function addToCart(name, price, icon){
+  if(!cart[name]) cart[name] = { qty: 0, price, icon };
+  cart[name].qty += 1;
+  updateBadge();
+  renderCart();
+}
+
+function changeQty(name, delta){
+  if(!cart[name]) return;
+  cart[name].qty += delta;
+  if(cart[name].qty <= 0) delete cart[name];
+  updateBadge();
+  renderCart();
+}
+
+function updateBadge(){
+  const totalQty = Object.values(cart).reduce((s,i) => s + i.qty, 0);
+  const totalValue = Object.values(cart).reduce((s,i) => s + i.qty * i.price, 0);
+  document.getElementById('cart-badge').textContent = totalQty;
+  document.getElementById('mini-cart-count').textContent = totalQty;
+  document.getElementById('mini-cart-value').textContent = 'R$ ' + totalValue.toFixed(2).replace('.', ',');
+}
+
+function renderCart(){
+  const el = document.getElementById('cart-content');
+  const items = Object.entries(cart);
+
+  if(items.length === 0){
+    el.innerHTML = '<div class="empty-cart">Seu carrinho está vazio.<br>Volte ao catálogo e acerte a cesta para adicionar algo.</div>';
+    return;
+  }
+
+  let html = '<div class="cart-list">';
+  let total = 0;
+  items.forEach(([name, data]) => {
+    const subtotal = data.qty * data.price;
+    total += subtotal;
+    html += `
+      <div class="cart-item">
+        <div class="cart-item-left">
+          <div class="cart-icon">${data.icon}</div>
+          <div>
+            <div class="cart-name">${name}</div>
+            <div class="cart-sub">R$ ${data.price.toFixed(2).replace('.',',')} un.</div>
+          </div>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty('${name}', -1)">−</button>
+          <span>${data.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${name}', 1)">+</button>
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  html += `
+    <div class="summary">
+      <div>
+        <div class="total-label">Total</div>
+        <div class="total-value">R$ ${total.toFixed(2).replace('.',',')}</div>
+      </div>
+    </div>
+    <button class="checkout-btn" onclick="alert('Compra finalizada (simulação).')">Finalizar compra</button>
+  `;
+  el.innerHTML = html;
+}
+
+function showView(view){
+  document.getElementById('view-catalog').classList.toggle('active', view === 'catalog');
+  document.getElementById('view-cart').classList.toggle('active', view === 'cart');
+  document.getElementById('nav-catalog').classList.toggle('active', view === 'catalog');
+  document.getElementById('nav-cart').classList.toggle('active', view === 'cart');
+  hoop.style.display = view === 'catalog' ? '' : 'none';
+  document.getElementById('mini-cart').style.display = view === 'catalog' ? '' : 'none';
+  if(view === 'cart') renderCart();
+}
+</script>
+
+</body>
+</html>
