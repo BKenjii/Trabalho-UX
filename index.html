@@ -8,15 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1B1230;
-    --surface:#241A3D;
-    --surface-2:#2E2150;
-    --lime:#C8FF4D;
-    --coral:#FF6B5B;
-    --orange:#FF9640;
-    --cream:#FBF7F0;
-    --muted:#9C8FC0;
-    --line:#3B2C63;
+    --bg:#171310;
+    --surface:#221B15;
+    --surface-2:#2C2318;
+    --lime:#FFB74D;
+    --coral:#D6483D;
+    --orange:#FF7A1A;
+    --cream:#F5EFE0;
+    --muted:#9C9088;
+    --line:#3A2E22;
   }
   *{box-sizing:border-box;}
   body{
@@ -65,29 +65,29 @@
     border-radius:20px;
   }
   main{
-    max-width:1100px;
+    max-width:1180px;
     margin:0 auto;
     padding:40px 40px 160px;
   }
   .view{display:none;}
   .view.active{display:block;}
-
   .page-title{
     font-family:'Baloo 2',sans-serif;
-    font-size:30px;
-    margin:0 0 6px;
+    font-size:36px;
+    margin:0 0 8px;
   }
   .page-sub{
     color:var(--muted);
-    font-size:14px;
+    font-size:15px;
     margin-bottom:36px;
   }
-
   /* ---- CATALOG (horizontal) ---- */
   #product-list{
     display:flex;
-    gap:20px;
-    overflow-x:auto;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:28px;
+    overflow-x:visible;
     padding-bottom:20px;
     scrollbar-width:thin;
     scrollbar-color:var(--line) transparent;
@@ -110,13 +110,13 @@
     flex-direction:column;
     align-items:center;
     text-align:center;
-    gap:18px;
+    gap:24px;
     background:var(--surface);
     border:1px solid var(--line);
-    border-radius:20px;
-    padding:34px 26px 26px;
+    border-radius:24px;
+    padding:44px 30px 32px;
     position:relative;
-    flex:0 0 240px;
+    flex:0 0 290px;
   }
   .court-line{
     position:absolute;
@@ -127,26 +127,25 @@
     border-bottom:2px dashed var(--line);
   }
   .ball-slot{
-    width:86px;
-    height:86px;
+    width:104px;
+    height:104px;
     flex-shrink:0;
     position:relative;
   }
   .ball{
-    width:86px;
-    height:86px;
+    width:104px;
+    height:104px;
     border-radius:50%;
-    background:radial-gradient(circle at 32% 28%, #ffffff, #f2f0f6 60%, #d9d5e4 100%);
+    background:radial-gradient(circle at 35% 30%, #ffffff, #f0ede6 55%, #d8d3c8 100%);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:36px;
+    font-size:34px;
     cursor:grab;
-    box-shadow:0 6px 14px rgba(0,0,0,0.35);
+    box-shadow:inset -6px -8px 14px rgba(0,0,0,0.25), 0 4px 10px rgba(0,0,0,0.5);
     position:relative;
     touch-action:none;
   }
-
   .ball.dragging{
     cursor:grabbing;
     z-index:100;
@@ -157,17 +156,15 @@
     z-index:100;
   }
   .ball.hidden-slot{opacity:0; pointer-events:none;}
-
-  .p-name{font-weight:600; font-size:16px;}
-  .p-price{color:var(--lime); font-weight:600; font-size:15px;}
-  .p-hint{color:var(--muted); font-size:11px; margin-top:2px;}
-
+  .p-name{font-weight:600; font-size:18px;}
+  .p-price{color:var(--lime); font-weight:600; font-size:16px;}
+  .p-hint{color:var(--muted); font-size:12px; margin-top:4px;}
   /* ---- FIXED HOOP ---- */
   .hoop-wrap{
     position:fixed;
-    top:100px;
-    right:36px;
-    width:270px;
+    top:90px;
+    right:30px;
+    width:360px;
     z-index:20;
     text-align:center;
     pointer-events:none;
@@ -196,7 +193,6 @@
     opacity:1;
     transform:translateX(-50%) translateY(-14px);
   }
-
   .toast{
     position:fixed;
     top:20px;
@@ -214,7 +210,6 @@
     white-space:nowrap;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
-
   /* ---- MINI CART SUMMARY (bottom right) ---- */
   .mini-cart{
     position:fixed;
@@ -265,7 +260,6 @@
   .mini-cart-text{text-align:left;}
   .mini-cart-label{font-size:11px; color:var(--muted); line-height:1.3;}
   .mini-cart-value{font-size:15px; font-weight:600; color:var(--cream); line-height:1.3;}
-
   .rule-box{
     background:var(--surface);
     border:1px solid var(--line);
@@ -277,7 +271,6 @@
     margin-bottom:30px;
   }
   .rule-box b{color:var(--cream);}
-
   /* ---- CART VIEW ---- */
   .cart-list{
     display:flex;
@@ -299,7 +292,8 @@
     width:48px;
     height:48px;
     border-radius:50%;
-    background:radial-gradient(circle at 32% 28%, #ffb066, var(--orange) 60%, #d9711f 100%);
+    background:var(--surface-2);
+    border:1px solid var(--line);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -347,7 +341,6 @@
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">michael <span>jackson</span></div>
   <nav>
@@ -357,20 +350,17 @@
     </button>
   </nav>
 </header>
-
 <div class="hoop-wrap" id="hoop">
   <div class="score-flash" id="score-flash">Cesta!</div>
   <svg class="hoop-svg" viewBox="0 0 210 170">
-    <rect x="30" y="4" width="110" height="70" rx="6" fill="#2E2150" stroke="#C8FF4D" stroke-width="3"/>
-    <rect x="52" y="20" width="66" height="40" fill="none" stroke="#C8FF4D" stroke-width="2"/>
-    <ellipse cx="85" cy="80" rx="48" ry="11" fill="none" stroke="#FF9640" stroke-width="6"/>
-    <path d="M42 84 L52 144 M62 84 L68 146 M85 86 L85 150 M108 84 L102 146 M128 84 L118 144" stroke="#3B2C63" stroke-width="2" fill="none"/>
+    <rect x="30" y="4" width="110" height="70" rx="4" fill="#F5EFE0" stroke="#171310" stroke-width="4"/>
+    <rect x="52" y="20" width="66" height="40" fill="none" stroke="#171310" stroke-width="3"/>
+    <ellipse cx="85" cy="80" rx="48" ry="11" fill="none" stroke="#FF7A1A" stroke-width="7"/>
+    <path d="M42 84 L52 144 M62 84 L68 146 M85 86 L85 150 M108 84 L102 146 M128 84 L118 144" stroke="#D8CFC0" stroke-width="2" fill="none"/>
   </svg>
   <div class="hoop-label">acerte a cesta</div>
 </div>
-
 <div class="toast" id="toast">Não foi dessa vez!</div>
-
 <div class="mini-cart" id="mini-cart" onclick="showView('cart')">
   <div class="mini-cart-icon">
     🛒
@@ -381,30 +371,23 @@
     <div class="mini-cart-value" id="mini-cart-value">R$ 0,00</div>
   </div>
 </div>
-
 <main>
-
   <!-- CATALOG VIEW -->
   <div class="view active" id="view-catalog">
     <h1 class="page-title">Catálogo</h1>
     <div class="page-sub">arraste a bola pra trás, mire na cesta e solte para adicionar o produto</div>
-
     <div class="rule-box">
       <b>Como funciona:</b> clique na bola de cada produto, puxe no sentido contrário à cesta
       (efeito estilingue) e solte. Quanto mais precisa a mira, maior a chance de acertar.
     </div>
-
     <div id="product-list"></div>
   </div>
-
   <!-- CART VIEW -->
   <div class="view" id="view-cart">
     <h2 class="page-title">Seu carrinho</h2>
     <div id="cart-content"></div>
   </div>
-
 </main>
-
 <script>
 const products = [
   { id: 'tenis', name: 'Tênis Voltz Runner', price: 349.90, icon: '👟' },
@@ -413,9 +396,7 @@ const products = [
   { id: 'mochila', name: 'Mochila Zen 20L', price: 219.90, icon: '🎒' },
   { id: 'fone', name: 'Fone Loop Wireless', price: 279.90, icon: '🎧' }
 ];
-
 let cart = {};
-
 const listEl = document.getElementById('product-list');
 products.forEach(p => {
   const row = document.createElement('div');
@@ -433,16 +414,13 @@ products.forEach(p => {
   `;
   listEl.appendChild(row);
 });
-
 const hoop = document.getElementById('hoop');
 const toast = document.getElementById('toast');
 const scoreFlash = document.getElementById('score-flash');
-
 let dragState = null;
 const GRAVITY = 1100; // px/s^2
 const POWER = 3.6;
 const MIN_DRAG = 10;
-
 document.addEventListener('mousedown', (e) => {
   const ball = e.target.closest('.ball');
   if(!ball || ball.classList.contains('flying')) return;
@@ -462,23 +440,19 @@ document.addEventListener('mousedown', (e) => {
   ball.style.top = rect.top + 'px';
   e.preventDefault();
 });
-
 document.addEventListener('mousemove', (e) => {
   if(!dragState) return;
   const { ball, offsetX, offsetY } = dragState;
   ball.style.left = (e.clientX - offsetX) + 'px';
   ball.style.top = (e.clientY - offsetY) + 'px';
 });
-
 document.addEventListener('mouseup', (e) => {
   if(!dragState) return;
   const { ball, startX, startY, slotRect } = dragState;
   const dx = e.clientX - startX;
   const dy = e.clientY - startY;
   const dragDist = Math.sqrt(dx*dx + dy*dy);
-
   ball.classList.remove('dragging');
-
   if(dragDist < MIN_DRAG){
     ball.style.position = '';
     ball.style.left = '';
@@ -488,14 +462,11 @@ document.addEventListener('mouseup', (e) => {
     dragState = null;
     return;
   }
-
   const vx = -dx * POWER;
   const vy = -dy * POWER;
-
   launchBall(ball, slotRect, vx, vy);
   dragState = null;
 });
-
 function launchBall(ball, originRect, vx, vy){
   ball.classList.add('flying');
   let x = originRect.left;
@@ -505,64 +476,51 @@ function launchBall(ball, originRect, vx, vy){
   let scored = false;
   let lastTime = performance.now();
   const floorY = window.innerHeight + 100;
-
   function frame(now){
     const dt = Math.min((now - lastTime) / 1000, 0.032);
     lastTime = now;
-
     velY += GRAVITY * dt;
     x += velX * dt;
     y += velY * dt;
-
     ball.style.left = x + 'px';
     ball.style.top = y + 'px';
-
     const hoopRect = hoop.getBoundingClientRect();
+    const scale = hoopRect.width / 210;
     const ballCx = x + originRect.width/2;
     const ballCy = y + originRect.height/2;
     const hoopCx = hoopRect.left + hoopRect.width/2;
-    const hoopCy = hoopRect.top + 102;
-
+    const hoopCy = hoopRect.top + 80*scale;
     const distX = Math.abs(ballCx - hoopCx);
     const distY = Math.abs(ballCy - hoopCy);
-
-    if(!scored && velY > 0 && distX < 85 && distY < 60){
+    if(!scored && velY > 0 && distX < 66*scale && distY < 47*scale){
       scored = true;
       score(ball);
       return;
     }
-
     if(y > floorY){
       miss(ball, originRect);
       return;
     }
-
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 }
-
 function score(ball){
   ball.style.transition = 'transform 0.2s, opacity 0.2s';
   ball.style.transform = 'scale(0.3)';
   ball.style.opacity = '0';
-
   scoreFlash.textContent = 'Cesta!';
   scoreFlash.classList.add('show');
   setTimeout(() => scoreFlash.classList.remove('show'), 700);
-
   addToCart(ball.dataset.name, parseFloat(ball.dataset.price), ball.dataset.icon);
-
   setTimeout(() => resetBall(ball), 250);
 }
-
 function miss(ball, originRect){
   showToast('Não foi dessa vez! Tente de novo.');
   ball.style.transition = 'opacity 0.25s';
   ball.style.opacity = '0';
   setTimeout(() => resetBall(ball), 250);
 }
-
 function resetBall(ball){
   ball.classList.remove('flying');
   ball.style.transition = '';
@@ -574,20 +532,17 @@ function resetBall(ball){
   ball.style.width = '';
   ball.style.height = '';
 }
-
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 1300);
 }
-
 function addToCart(name, price, icon){
   if(!cart[name]) cart[name] = { qty: 0, price, icon };
   cart[name].qty += 1;
   updateBadge();
   renderCart();
 }
-
 function changeQty(name, delta){
   if(!cart[name]) return;
   cart[name].qty += delta;
@@ -595,7 +550,6 @@ function changeQty(name, delta){
   updateBadge();
   renderCart();
 }
-
 function updateBadge(){
   const totalQty = Object.values(cart).reduce((s,i) => s + i.qty, 0);
   const totalValue = Object.values(cart).reduce((s,i) => s + i.qty * i.price, 0);
@@ -603,16 +557,13 @@ function updateBadge(){
   document.getElementById('mini-cart-count').textContent = totalQty;
   document.getElementById('mini-cart-value').textContent = 'R$ ' + totalValue.toFixed(2).replace('.', ',');
 }
-
 function renderCart(){
   const el = document.getElementById('cart-content');
   const items = Object.entries(cart);
-
   if(items.length === 0){
     el.innerHTML = '<div class="empty-cart">Seu carrinho está vazio.<br>Volte ao catálogo e acerte a cesta para adicionar algo.</div>';
     return;
   }
-
   let html = '<div class="cart-list">';
   let total = 0;
   items.forEach(([name, data]) => {
@@ -647,7 +598,6 @@ function renderCart(){
   `;
   el.innerHTML = html;
 }
-
 function showView(view){
   document.getElementById('view-catalog').classList.toggle('active', view === 'catalog');
   document.getElementById('view-cart').classList.toggle('active', view === 'cart');
@@ -658,6 +608,5 @@ function showView(view){
   if(view === 'cart') renderCart();
 }
 </script>
-
 </body>
 </html>
