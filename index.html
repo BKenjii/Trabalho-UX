@@ -161,20 +161,15 @@
   .p-hint{color:var(--muted); font-size:12px; margin-top:4px;}
   /* ---- FIXED HOOP ---- */
   .hoop-wrap{
-    position:fixed;
+    position:absolute;
     top:90px;
-    right:30px;
+    right:-120px;
     width:360px;
     z-index:20;
     text-align:center;
     pointer-events:none;
   }
   .hoop-svg{width:100%; display:block;}
-  .hoop-label{
-    font-size:11px;
-    color:var(--muted);
-    margin-top:4px;
-  }
   .score-flash{
     position:absolute;
     top:-10px;
@@ -358,7 +353,6 @@
     <ellipse cx="85" cy="80" rx="48" ry="11" fill="none" stroke="#FF7A1A" stroke-width="7"/>
     <path d="M42 84 L52 144 M62 84 L68 146 M85 86 L85 150 M108 84 L102 146 M128 84 L118 144" stroke="#D8CFC0" stroke-width="2" fill="none"/>
   </svg>
-  <div class="hoop-label">acerte a cesta</div>
 </div>
 <div class="toast" id="toast">Não foi dessa vez!</div>
 <div class="mini-cart" id="mini-cart" onclick="showView('cart')">
@@ -561,7 +555,7 @@ function renderCart(){
   const el = document.getElementById('cart-content');
   const items = Object.entries(cart);
   if(items.length === 0){
-    el.innerHTML = '<div class="empty-cart">Seu carrinho está vazio.<br>Volte ao catálogo e acerte a cesta para adicionar algo.</div>';
+    el.innerHTML = '<div class="empty-cart">Seu carrinho está vazio.<br>Volte ao catálogo para adicionar algo.</div>';
     return;
   }
   let html = '<div class="cart-list">';
