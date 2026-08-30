@@ -67,7 +67,8 @@
   main{
     max-width:1180px;
     margin:0 auto;
-    padding:40px 40px 160px;
+    /* Alterado: padding superior aumentado para descer o catálogo */
+    padding:160px 40px 160px;
   }
   .view{display:none;}
   .view.active{display:block;}
@@ -159,12 +160,14 @@
   .p-name{font-weight:600; font-size:18px;}
   .p-price{color:var(--lime); font-weight:600; font-size:16px;}
   .p-hint{color:var(--muted); font-size:12px; margin-top:4px;}
+  
   /* ---- FIXED HOOP ---- */
   .hoop-wrap{
     position:absolute;
     top:90px;
-    right:-120px;
-    width:360px;
+    /* Alterado: cesta menor (220px) e ajustada para dentro da tela (right: 10px) */
+    right:10px;
+    width:220px; 
     z-index:20;
     text-align:center;
     pointer-events:none;
@@ -205,6 +208,7 @@
     white-space:nowrap;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  
   /* ---- MINI CART SUMMARY (bottom right) ---- */
   .mini-cart{
     position:fixed;
@@ -266,6 +270,7 @@
     margin-bottom:30px;
   }
   .rule-box b{color:var(--cream);}
+  
   /* ---- CART VIEW ---- */
   .cart-list{
     display:flex;
@@ -354,7 +359,6 @@
     <path d="M42 84 L52 144 M62 84 L68 146 M85 86 L85 150 M108 84 L102 146 M128 84 L118 144" stroke="#D8CFC0" stroke-width="2" fill="none"/>
   </svg>
 </div>
-<div class="toast" id="toast">Não foi dessa vez!</div>
 <div class="mini-cart" id="mini-cart" onclick="showView('cart')">
   <div class="mini-cart-icon">
     🛒
@@ -369,11 +373,6 @@
   <!-- CATALOG VIEW -->
   <div class="view active" id="view-catalog">
     <h1 class="page-title">Catálogo</h1>
-    <div class="page-sub">arraste a bola pra trás, mire na cesta e solte para adicionar o produto</div>
-    <div class="rule-box">
-      <b>Como funciona:</b> clique na bola de cada produto, puxe no sentido contrário à cesta
-      (efeito estilingue) e solte. Quanto mais precisa a mira, maior a chance de acertar.
-    </div>
     <div id="product-list"></div>
   </div>
   <!-- CART VIEW -->
@@ -510,7 +509,6 @@ function score(ball){
   setTimeout(() => resetBall(ball), 250);
 }
 function miss(ball, originRect){
-  showToast('Não foi dessa vez! Tente de novo.');
   ball.style.transition = 'opacity 0.25s';
   ball.style.opacity = '0';
   setTimeout(() => resetBall(ball), 250);
