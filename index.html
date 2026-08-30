@@ -50,7 +50,6 @@
     font-family:'Inter',sans-serif;
     font-size:15px;
     font-weight:500;
-    cursor:pointer;
     display:flex;
     align-items:center;
     gap:8px;
@@ -142,13 +141,11 @@
     align-items:center;
     justify-content:center;
     font-size:34px;
-    cursor:grab;
     box-shadow:inset -6px -8px 14px rgba(0,0,0,0.25), 0 4px 10px rgba(0,0,0,0.5);
     position:relative;
     touch-action:none;
   }
   .ball.dragging{
-    cursor:grabbing;
     z-index:100;
     position:fixed;
   }
@@ -156,7 +153,6 @@
     position:fixed;
     z-index:100;
   }
-  .ball.hidden-slot{opacity:0; pointer-events:none;}
   .p-name{font-weight:600; font-size:18px;}
   .p-price{color:var(--lime); font-weight:600; font-size:16px;}
   .p-hint{color:var(--muted); font-size:12px; margin-top:4px;}
@@ -170,7 +166,6 @@
     width:220px; 
     z-index:20;
     text-align:center;
-    pointer-events:none;
   }
   .hoop-svg{width:100%; display:block;}
   .score-flash{
@@ -222,7 +217,6 @@
     align-items:center;
     gap:14px;
     z-index:25;
-    cursor:pointer;
     transition:transform 0.15s, border-color 0.15s;
   }
   .mini-cart:hover{
@@ -308,7 +302,6 @@
     border:1px solid var(--line);
     background:var(--surface-2);
     color:var(--cream);
-    cursor:pointer;
     font-size:15px;
     line-height:1;
   }
@@ -334,7 +327,6 @@
     border-radius:30px;
     font-weight:700;
     font-size:15px;
-    cursor:pointer;
     margin-top:20px;
     width:100%;
   }
@@ -402,7 +394,6 @@ products.forEach(p => {
     <div>
       <div class="p-name">${p.name}</div>
       <div class="p-price">R$ ${p.price.toFixed(2).replace('.', ',')}</div>
-      <div class="p-hint">puxe a bola e solte para arremessar</div>
     </div>
   `;
   listEl.appendChild(row);
