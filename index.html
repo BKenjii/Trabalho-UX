@@ -2,23 +2,28 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Michael Jackson — Catálogo</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pijamas — Catálogo</title>
+<!-- VIOLAÇÃO PROPOSITAL #8 — WCAG 1.4.4 "Redimensionar texto" [AA] e 1.4.10
+     "Reflow" [AA]: maximum-scale=1 e user-scalable=no impedem que a pessoa
+     dê zoom na página, mesmo precisando de texto maior. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#171310;
-    --surface:#221B15;
-    --surface-2:#2C2318;
+    --bg:#000000;
+    --surface:#121212;
+    --surface-2:#1c1c1c;
     --lime:#FFB74D;
     --coral:#D6483D;
     --orange:#FF7A1A;
     --cream:#F5EFE0;
     --muted:#9C9088;
-    --line:#3A2E22;
+    --line:#2A2A2A;
   }
   *{box-sizing:border-box;}
+  /* VIOLAÇÃO PROPOSITAL #9 — WCAG 2.4.7 "Foco visível" [AA] */
+  *:focus{outline:none;}
   body{
     margin:0;
     background:var(--bg);
@@ -53,6 +58,8 @@
     display:flex;
     align-items:center;
     gap:8px;
+    cursor:pointer;
+    transition: color 0.2s;
   }
   .nav-link.active{color:var(--cream);}
   .cart-badge{
@@ -64,127 +71,155 @@
     border-radius:20px;
   }
   main{
-    max-width:1180px;
+    max-width:1320px;
     margin:0 auto;
-    /* Alterado: padding superior aumentado para descer o catálogo */
-    padding:160px 40px 160px;
+    padding:64px 40px 160px;
   }
   .view{display:none;}
   .view.active{display:block;}
   .page-title{
     font-family:'Baloo 2',sans-serif;
     font-size:36px;
-    margin:0 0 8px;
+    margin: 0 0 8px;
+    text-align:center;
   }
   .page-sub{
     color:var(--muted);
     font-size:15px;
-    margin-bottom:36px;
+    margin-bottom:28px;
+    text-align:center;
   }
-  /* ---- CATALOG (horizontal) ---- */
-  #product-list{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:28px;
-    overflow-x:visible;
-    padding-bottom:20px;
-    scrollbar-width:thin;
-    scrollbar-color:var(--line) transparent;
-  }
-  #product-list::-webkit-scrollbar{
-    height:5px;
-  }
-  #product-list::-webkit-scrollbar-track{
-    background:transparent;
-  }
-  #product-list::-webkit-scrollbar-thumb{
-    background:var(--line);
-    border-radius:10px;
-  }
-  #product-list::-webkit-scrollbar-thumb:hover{
-    background:var(--muted);
-  }
-  .product-row{
+
+  /* ---- WALL BOARD ---- */
+  .wall-wrap{
+    max-width:1020px;
+    margin:0 auto;
     display:flex;
     flex-direction:column;
     align-items:center;
-    text-align:center;
-    gap:24px;
+  }
+  .drop-btn{
+    background:var(--lime);
+    color:#1B1230;
+    border:none;
+    padding:14px 34px;
+    border-radius:30px;
+    font-weight:700;
+    font-size:15px;
+    margin-bottom:28px;
+    font-family:'Baloo 2',sans-serif;
+    letter-spacing:.3px;
+    display:inline-block;
+    user-select:none;
+  }
+  .drop-btn{cursor:default;}
+  .drop-btn.is-disabled{opacity:.45; pointer-events:none;}
+  .board{
+    position:relative;
+    width:100%;
+    max-width:960px;
+    aspect-ratio:960/540;
     background:var(--surface);
     border:1px solid var(--line);
-    border-radius:24px;
-    padding:44px 30px 32px;
-    position:relative;
-    flex:0 0 290px;
+    border-radius:20px;
+    overflow:hidden;
   }
-  .court-line{
+  .peg{
     position:absolute;
-    bottom:14px;
-    left:20px;
-    right:20px;
-    height:0;
-    border-bottom:2px dashed var(--line);
-  }
-  .ball-slot{
-    width:104px;
-    height:104px;
-    flex-shrink:0;
-    position:relative;
-  }
-  .ball{
-    width:104px;
-    height:104px;
+    width:7px;
+    height:7px;
     border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #ffffff, #f0ede6 55%, #d8d3c8 100%);
+    background:var(--muted);
+    opacity:.55;
+    transform:translate(-50%,-50%);
+  }
+  .chute{
+    position:absolute;
+    top:6px;
+    left:50%;
+    transform:translateX(-50%);
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:34px;
-    box-shadow:inset -6px -8px 14px rgba(0,0,0,0.25), 0 4px 10px rgba(0,0,0,0.5);
-    position:relative;
-    touch-action:none;
+    font-size:13px;
+    z-index:5;
   }
-  .ball.dragging{
-    z-index:100;
-    position:fixed;
-  }
-  .ball.flying{
-    position:fixed;
-    z-index:100;
-  }
-  .p-name{font-weight:600; font-size:18px;}
-  .p-price{color:var(--lime); font-weight:600; font-size:16px;}
-  .p-hint{color:var(--muted); font-size:12px; margin-top:4px;}
-  
-  /* ---- FIXED HOOP ---- */
-  .hoop-wrap{
+  .ball{
     position:absolute;
-    top:150px;
-    /* Alterado: cesta menor (220px) e ajustada para dentro da tela (right: 10px) */
-    right:10px;
-    width:220px; 
-    z-index:20;
-    text-align:center;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #ffffff, #f0ede6 55%, #d8d3c8 100%);
+    box-shadow:inset -4px -5px 8px rgba(0,0,0,.25), 0 3px 6px rgba(0,0,0,.5);
+    transform:translate(-50%,-50%);
+    z-index:10;
+    transition:left .13s linear, top .13s linear;
   }
-  .hoop-svg{width:100%; display:block;}
+  .slots{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    display:flex;
+    height:26%;
+    border-top:1px solid var(--line);
+  }
+  .slot{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    border-right:1px solid var(--line);
+    border-top:2px solid rgba(255,183,77,.28);
+    padding:12px 4px 10px;
+    text-align:center;
+    background:linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+    transition:background .25s;
+  }
+  .slot:last-child{border-right:none;}
+  .slot-icon{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:19px;
+    box-shadow:0 2px 4px rgba(0,0,0,.35);
+  }
+  .slot-price{font-size:11px; color:#4a3d2e; font-weight:600; line-height:1.2;}
+  .slot.hit{background:var(--surface-2);}
+  .slot.pulse{animation:pulseSlot .6s ease;}
+  @keyframes pulseSlot{
+    0%{background:var(--lime);}
+    100%{background:transparent;}
+  }
   .score-flash{
     position:absolute;
-    top:-10px;
+    top:16px;
     left:50%;
-    transform:translateX(-50%);
+    transform:translateX(-50%) translateY(-8px);
     background:var(--lime);
     color:#1B1230;
     font-weight:700;
     font-size:12px;
-    padding:4px 10px;
+    padding:5px 14px;
     border-radius:20px;
     opacity:0;
-    transition:opacity 0.2s, transform 0.3s;
+    transition:opacity .2s, transform .3s;
+    z-index:50;
+    white-space:nowrap;
   }
   .score-flash.show{
     opacity:1;
-    transform:translateX(-50%) translateY(-14px);
+    transform:translateX(-50%) translateY(0);
   }
   .toast{
     position:fixed;
@@ -201,10 +236,11 @@
     transition:opacity 0.25s, transform 0.25s;
     z-index:200;
     white-space:nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
-  
-  /* ---- MINI CART SUMMARY (bottom right) ---- */
+
+  /* ---- MINI CART SUMMARY ---- */
   .mini-cart{
     position:fixed;
     bottom:28px;
@@ -218,9 +254,11 @@
     gap:14px;
     z-index:25;
     transition:transform 0.15s, border-color 0.15s;
+    cursor:pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.6);
   }
   .mini-cart:hover{
-    border-color:var(--border-strong, var(--line));
+    border-color:var(--muted);
     transform:translateY(-2px);
   }
   .mini-cart-icon{
@@ -250,21 +288,8 @@
     align-items:center;
     justify-content:center;
   }
-  .mini-cart-text{text-align:left;}
-  .mini-cart-label{font-size:11px; color:var(--muted); line-height:1.3;}
-  .mini-cart-value{font-size:15px; font-weight:600; color:var(--cream); line-height:1.3;}
-  .rule-box{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:16px 20px;
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.6;
-    margin-bottom:30px;
-  }
-  .rule-box b{color:var(--cream);}
-  
+  .mini-cart-text{display:none;}
+
   /* ---- CART VIEW ---- */
   .cart-list{
     display:flex;
@@ -295,15 +320,16 @@
   }
   .cart-name{font-weight:600; font-size:15px;}
   .cart-sub{font-size:13px; color:var(--muted); margin-top:2px;}
-  .qty-controls{display:flex; align-items:center; gap:10px;}
+  .qty-controls{display:flex; align-items:center; gap:4px;}
   .qty-btn{
-    width:28px; height:28px;
+    width:16px; height:16px;
     border-radius:50%;
     border:1px solid var(--line);
     background:var(--surface-2);
     color:var(--cream);
-    font-size:15px;
+    font-size:10px;
     line-height:1;
+    cursor:pointer;
   }
   .empty-cart{
     text-align:center;
@@ -320,37 +346,301 @@
   .total-label{color:var(--muted); font-size:14px;}
   .total-value{font-family:'Baloo 2',sans-serif; font-size:26px; font-weight:700; color:var(--lime);}
   .checkout-btn{
-    background:var(--lime);
+    background:var(--coral);
+    color:var(--cream);
+    border:2px solid #8f2d24;
+    padding:16px 26px;
+    border-radius:4px;
+    font-weight:700;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-family:'Inter',sans-serif;
+    margin-top:20px;
+    margin-bottom:24px;
+    width:100%;
+    cursor:pointer;
+    animation:pulseCheckout 1.2s ease-in-out infinite;
+  }
+  @keyframes pulseCheckout{
+    0%, 100%{ transform:scale(1); }
+    50%{ transform:scale(1.035); }
+  }
+
+  /* ---- ROLETA ---- */
+  .roulette-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.85);
+    backdrop-filter: blur(4px);
+    z-index:100;
+    align-items:center;
+    justify-content:center;
+  }
+  .roulette-overlay.show{display:flex;}
+  .roulette-modal{
+    background: linear-gradient(145deg, #1e1e1e, #121212);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    border-radius:24px;
+    padding:32px 36px 28px;
+    max-width:380px;
+    width:90%;
+    text-align:center;
+  }
+  .roulette-modal h3{
+    font-family:'Baloo 2',sans-serif;
+    font-size:24px;
+    color: var(--lime);
+    margin:0 0 4px;
+  }
+  .roulette-sub{color:var(--muted); font-size:13px; margin-bottom:24px;}
+  .wheel-wrap{
+    position:relative;
+    width:250px;
+    height:250px;
+    margin:0 auto 28px;
+  }
+  .wheel-pointer{
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:32px;
+    color: #fff;
+    z-index:10;
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,.8));
+  }
+  .wheel{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    border:6px solid #2a2a2a;
+    box-shadow: 0 0 25px rgba(255, 183, 77, 0.25);
+    position:relative;
+    transform:rotate(0deg);
+  }
+  /* Bolinha central estilizada na roleta */
+  .wheel::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 24px; height: 24px; background: #2a2a2a;
+    border-radius: 50%; transform: translate(-50%, -50%);
+    border: 3px solid var(--lime); z-index: 5;
+  }
+  .wheel-label{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:110px;
+    text-align:center;
+    font-weight:800;
+    font-size:14px;
     color:#1B1230;
+    transform-origin:0 0;
+  }
+  .spin-btn, .confirm-btn, .close-modal{
     border:none;
-    padding:14px 26px;
     border-radius:30px;
+    padding:13px 28px;
     font-weight:700;
     font-size:15px;
-    margin-top:20px;
+    font-family:'Baloo 2',sans-serif;
+    cursor:pointer;
     width:100%;
+    margin-top:10px;
+    transition: transform 0.1s, opacity 0.2s;
   }
+  .spin-btn{background:var(--lime); color:#1B1230; box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4);}
+  .spin-btn:hover:not(:disabled) { transform: scale(1.03); }
+  .spin-btn:disabled{opacity:.45; cursor:default; box-shadow: none;}
+  .confirm-btn{background:var(--lime); color:#1B1230; display:none;}
+  .close-modal{background:none; color:var(--muted); font-family:'Inter',sans-serif; font-weight:500;}
+  .close-modal:hover { color: #fff; }
+  .roulette-result{
+    min-height:24px;
+    font-weight:700;
+    font-size:16px;
+    color:var(--lime);
+    margin-bottom:10px;
+  }
+
+  /* ---- SUCESSO ---- */
+  .success-stage{display:none;}
+  .success-stage.show{display:block;}
+  .success-check{
+    width:64px;
+    height:64px;
+    margin:0 auto 14px;
+    border-radius:50%;
+    background:radial-gradient(circle, #4CAF7D 0%, #2E7D53 100%);
+    color:#fff;
+    font-size:32px;
+    font-weight:800;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 14px rgba(76,175,125,.35);
+  }
+  .success-stage h3{
+    font-family:'Baloo 2',sans-serif;
+    font-size:22px;
+    margin:0 0 6px;
+  }
+  .success-sub{color:var(--muted); font-size:13px; margin-bottom:20px;}
+  .success-sub span{color:var(--cream); font-weight:600;}
+  .success-summary{
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:14px 18px;
+    margin-bottom:20px;
+    text-align:left;
+  }
+  .success-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    color:var(--muted);
+    padding:6px 0;
+  }
+  .success-row + .success-row{border-top:1px solid var(--line);}
+  .success-row span:last-child{color:var(--cream); font-weight:600;}
+  .success-total{padding-top:10px;}
+  .success-total span{font-size:16px !important;}
+  .success-total span:last-child{color:var(--lime) !important; font-weight:800 !important;}
+
+  /* ---- PRODUCTS VIEW ---- */
+  .product-rows{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    max-width:1000px;
+    margin:0 auto;
+  }
+  .product-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .product-row-track{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    overflow:hidden;
+  }
+  .row-arrow{
+    flex-shrink:0;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--cream);
+    font-size:22px;
+    line-height:1;
+    cursor:pointer;
+  }
+  .row-arrow:hover{background:var(--line);}
+  .product-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px 16px;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+  .product-card .p-icon{
+    width:56px; height:56px;
+    border-radius:50%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    margin-bottom:4px;
+  }
+  .product-card .p-name{font-weight:600; font-size:14px; color:var(--cream);}
+  .product-card .p-price{font-size:15px; font-weight:700; color:var(--lime);}
+
+  /* ---- BLACKJACK MODAL (BONITO E PREMIUM) ---- */
+  #bj-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+    z-index: 99999; align-items: center; justify-content: center;
+  }
+  #bj-overlay.show { display: flex; }
+  
+  #bj-modal {
+    background: linear-gradient(145deg, #1e1e1e, #111);
+    padding: 30px; border-radius: 20px; text-align: center;
+    width: 90%; max-width: 440px; 
+    border: 2px solid #2a2a2a;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.9), inset 0 2px 5px rgba(255,255,255,0.05);
+  }
+  
+  #bj-modal h2 { 
+    margin-top: 0; color: var(--lime); font-family: 'Baloo 2', sans-serif; 
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;
+  }
+  
+  .bj-mesa-lado { 
+    margin: 15px 0; 
+    background: rgba(0,0,0,0.4); 
+    padding: 15px; border-radius: 12px; 
+    border: 1px solid #333; 
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .bj-mesa-titulo { font-size: 13px; color: var(--muted); margin-bottom: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+  .bj-mesa-titulo strong { color: var(--cream); font-size: 18px; margin-left: 5px; background: #2a2a2a; padding: 2px 8px; border-radius: 6px; }
+  
+  .bj-cartas-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  
+  .bj-carta {
+    display: inline-flex; width: 48px; height: 70px;
+    background: #fff; color: #111; border-radius: 6px;
+    align-items: center; justify-content: center;
+    font-weight: 800; font-size: 22px; font-family: 'Inter', sans-serif;
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.4); border: 1px solid #ddd;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  
+  @keyframes popIn {
+      0% { transform: scale(0.5) translateY(-20px); opacity: 0; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .bj-carta.oculta {
+    background: repeating-linear-gradient(45deg, #b31217, #b31217 8px, #8b0000 8px, #8b0000 16px);
+    color: transparent; border: 2px solid #fff;
+  }
+
+  .bj-btn {
+    margin: 5px; padding: 12px 22px; cursor: pointer; border: none; background: var(--lime);
+    color: #1B1230; border-radius: 30px; font-weight: 800; font-family:'Baloo 2', sans-serif;
+    font-size: 15px; transition: transform 0.1s, opacity 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .bj-btn:hover { transform: scale(1.05); }
+  
+  #btn-bj-close { background: transparent; color: var(--muted); border: 1px solid var(--muted); display: none; width: 100%; margin-top: 20px; }
+  #btn-bj-close:hover { background: #2a2a2a; color: #fff; border-color: #555; }
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">michael <span>jackson</span></div>
+  <div class="logo"><span>Pijamas</span></div>
   <nav>
     <button class="nav-link active" id="nav-catalog" onclick="showView('catalog')">Catálogo</button>
+    <button class="nav-link" id="nav-products" onclick="showView('products')">Produtos</button>
     <button class="nav-link" id="nav-cart" onclick="showView('cart')">
       Carrinho <span class="cart-badge" id="cart-badge">0</span>
     </button>
   </nav>
 </header>
-<div class="hoop-wrap" id="hoop">
-  <div class="score-flash" id="score-flash">Cesta!</div>
-  <svg class="hoop-svg" viewBox="0 0 210 170">
-    <rect x="30" y="4" width="110" height="70" rx="4" fill="#F5EFE0" stroke="#171310" stroke-width="4"/>
-    <rect x="52" y="20" width="66" height="40" fill="none" stroke="#171310" stroke-width="3"/>
-    <ellipse cx="85" cy="80" rx="48" ry="11" fill="none" stroke="#FF7A1A" stroke-width="7"/>
-    <path d="M42 84 L52 144 M62 84 L68 146 M85 86 L85 150 M108 84 L102 146 M128 84 L118 144" stroke="#D8CFC0" stroke-width="2" fill="none"/>
-  </svg>
-</div>
 <div class="mini-cart" id="mini-cart" onclick="showView('cart')">
   <div class="mini-cart-icon">
     🛒
@@ -361,171 +651,265 @@
     <div class="mini-cart-value" id="mini-cart-value">R$ 0,00</div>
   </div>
 </div>
+<div class="toast" id="toast"></div>
 <main>
-  <!-- CATALOG VIEW -->
+  <!-- WALL VIEW -->
   <div class="view active" id="view-catalog">
     <h1 class="page-title">Catálogo</h1>
-    <div id="product-list"></div>
+    <p class="page-sub">Solte a bola</p>
+    <div class="wall-wrap">
+      <div class="drop-btn" id="drop-btn" onmousedown="dropBall()">Soltar bola</div>
+      <div class="board" id="board">
+        <div class="score-flash" id="score-flash"></div>
+        <div class="chute" id="chute">⚪</div>
+        <div class="ball" id="ball" style="display:none;"></div>
+        <div class="slots" id="slots"></div>
+      </div>
+    </div>
   </div>
   <!-- CART VIEW -->
   <div class="view" id="view-cart">
     <h2 class="page-title">Seu carrinho</h2>
     <div id="cart-content"></div>
   </div>
+  <!-- PRODUCTS VIEW -->
+  <div class="view" id="view-products">
+    <h2 class="page-title">Produtos</h2>
+    <div class="product-rows" id="product-rows">
+      <div class="product-row">
+        <div class="product-row-track" id="row-0"></div>
+        <button class="row-arrow" onclick="advanceRow(0)" aria-label="Próximos produtos">›</button>
+      </div>
+      <div class="product-row">
+        <div class="product-row-track" id="row-1"></div>
+        <button class="row-arrow" onclick="advanceRow(1)" aria-label="Próximos produtos">›</button>
+      </div>
+    </div>
+  </div>
 </main>
+
+<!-- ROLETA DE DESCONTOS -->
+<div class="roulette-overlay" id="roulette-overlay">
+  <div class="roulette-modal">
+    <div id="roulette-stage">
+      <h3>Roleta da Sorte</h3>
+      <p class="roulette-sub">Gire uma vez e leve o desconto que cair</p>
+      <div class="wheel-wrap">
+        <div class="wheel-pointer">▼</div>
+        <div class="wheel" id="wheel"></div>
+      </div>
+      <div class="roulette-result" id="roulette-result"></div>
+      <button class="spin-btn" id="spin-btn" onclick="spinWheel()">Girar Roleta</button>
+      <button class="confirm-btn" id="confirm-purchase-btn" onclick="confirmPurchase()">Confirmar Compra</button>
+      <button class="close-modal" onclick="closeRoulette()">Cancelar</button>
+    </div>
+    <div id="success-stage" class="success-stage">
+      <div class="success-check">✓</div>
+      <h3>Pedido realizado!</h3>
+      <p class="success-sub">Seu pedido <span id="success-order-id"></span> foi confirmado com sucesso.</p>
+      <div class="success-summary">
+        <div class="success-row">
+          <span>Subtotal</span>
+          <span id="success-subtotal"></span>
+        </div>
+        <div class="success-row" id="success-discount-row">
+          <span>Desconto</span>
+          <span id="success-discount"></span>
+        </div>
+        <div class="success-row success-total">
+          <span>Total pago</span>
+          <span id="success-total"></span>
+        </div>
+      </div>
+      <button class="spin-btn" onclick="closeRoulette(); showView('catalog');">Voltar ao catálogo</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DO BLACKJACK -->
+<div id="bj-overlay">
+    <div id="bj-modal">
+        <h2>Desafio de Remoção!</h2>
+        <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">
+          Ganhe no 21 para remover este item.<br> Se perder, <strong>+1 será adicionado</strong> a TODOS os itens do carrinho!
+        </p>
+        
+        <div class="bj-mesa-lado">
+            <div class="bj-mesa-titulo">Site (Dealer): <strong id="bj-dealer-score">??</strong></div>
+            <div class="bj-cartas-container" id="bj-dealer-cards">
+                <!-- Cartas do Dealer entram aqui -->
+            </div>
+        </div>
+
+        <div class="bj-mesa-lado">
+            <div class="bj-mesa-titulo">Sua Mão: <strong id="bj-player-score">0</strong></div>
+            <div class="bj-cartas-container" id="bj-player-cards">
+                <!-- Cartas do Player entram aqui -->
+            </div>
+        </div>
+
+        <p id="bj-msg" style="font-weight:bold; min-height: 24px; color:var(--lime); margin: 15px 0; font-size: 16px;"></p>
+        
+        <div id="bj-controls">
+            <button class="bj-btn" onclick="bjComprarCarta()">Pedir Carta</button>
+            <button class="bj-btn" style="background:#222; color:var(--cream); border: 1px solid #444;" onclick="bjParar()">Parar / Revelar</button>
+        </div>
+        <button class="bj-btn" id="btn-bj-close" onclick="fecharModalBj()">Voltar ao Carrinho</button>
+    </div>
+</div>
+
 <script>
-const products = [
-  { id: 'tenis', name: 'Tênis Voltz Runner', price: 349.90, icon: '👟' },
-  { id: 'bone', name: 'Boné Aero Cap', price: 89.90, icon: '🧢' },
-  { id: 'garrafa', name: 'Garrafa Flux 1L', price: 59.90, icon: '🍶' },
-  { id: 'mochila', name: 'Mochila Zen 20L', price: 219.90, icon: '🎒' },
-  { id: 'fone', name: 'Fone Loop Wireless', price: 279.90, icon: '🎧' }
+// Lista revertida para emojis, combinando com pijamas
+const slotsData = [
+  { name: 'Pijama Seda', price: 129.90, icon: '👘' },
+  { name: 'Pijama Algodão', price: 89.90, icon: '👕' },
+  { name: 'Camisola Conforto', price: 79.90, icon: '👗' },
+  { name: 'Pijama Flanelado', price: 149.90, icon: '🧥' },
+  { name: 'Pijama Infantil', price: 69.90, icon: '🧸' },
+  { name: 'Robe Cetim', price: 99.90, icon: '🥻' },
+  { name: 'Pijama Curto', price: 75.90, icon: '🩳' },
+  { name: 'Pijama Inverno', price: 139.90, icon: '🧣' },
+  { name: 'Moletom Lounge', price: 159.90, icon: '👚' },
+  { name: 'Pijama Longo', price: 119.90, icon: '👖' },
+  { name: 'Camisola Renda', price: 109.90, icon: '🤍' },
+  { name: 'Pantufa', price: 59.90, icon: '🥿' },
+  { name: 'Pijama Casal', price: 199.90, icon: '💑' },
+  { name: 'Máscara Dormir', price: 29.90, icon: '🎭' },
+  { name: 'Pijama Verão', price: 85.90, icon: '🌸' },
+  { name: 'Pijama Listrado', price: 95.90, icon: '🛌' }
 ];
+
+const NUM_SLOTS = slotsData.length;
+const NUM_STEPS = NUM_SLOTS - 1;
 let cart = {};
-const listEl = document.getElementById('product-list');
-products.forEach(p => {
-  const row = document.createElement('div');
-  row.className = 'product-row';
-  row.innerHTML = `
-    <div class="court-line"></div>
-    <div class="ball-slot">
-      <div class="ball" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-icon="${p.icon}">${p.icon}</div>
-    </div>
-    <div>
-      <div class="p-name">${p.name}</div>
-      <div class="p-price">R$ ${p.price.toFixed(2).replace('.', ',')}</div>
-    </div>
+let dropping = false;
+
+const slotsEl = document.getElementById('slots');
+slotsData.forEach((s, i) => {
+  const el = document.createElement('div');
+  el.className = 'slot';
+  el.id = 'slot-' + i;
+  el.innerHTML = `
+    <div class="slot-icon">${s.icon}</div>
+    <div class="slot-price">R$ ${s.price.toFixed(2).replace('.', ',')}</div>
   `;
-  listEl.appendChild(row);
+  slotsEl.appendChild(el);
 });
-const hoop = document.getElementById('hoop');
-const toast = document.getElementById('toast');
+
+const board = document.getElementById('board');
+const ball = document.getElementById('ball');
+const chute = document.getElementById('chute');
+const dropBtn = document.getElementById('drop-btn');
 const scoreFlash = document.getElementById('score-flash');
-let dragState = null;
-const GRAVITY = 1100; // px/s^2
-const POWER = 3.6;
-const MIN_DRAG = 10;
-document.addEventListener('mousedown', (e) => {
-  const ball = e.target.closest('.ball');
-  if(!ball || ball.classList.contains('flying')) return;
-  const rect = ball.getBoundingClientRect();
-  dragState = {
-    ball,
-    slotRect: rect,
-    startX: e.clientX,
-    startY: e.clientY,
-    offsetX: e.clientX - rect.left,
-    offsetY: e.clientY - rect.top
-  };
-  ball.classList.add('dragging');
-  ball.style.width = rect.width + 'px';
-  ball.style.height = rect.height + 'px';
-  ball.style.left = rect.left + 'px';
-  ball.style.top = rect.top + 'px';
-  e.preventDefault();
-});
-document.addEventListener('mousemove', (e) => {
-  if(!dragState) return;
-  const { ball, offsetX, offsetY } = dragState;
-  ball.style.left = (e.clientX - offsetX) + 'px';
-  ball.style.top = (e.clientY - offsetY) + 'px';
-});
-document.addEventListener('mouseup', (e) => {
-  if(!dragState) return;
-  const { ball, startX, startY, slotRect } = dragState;
-  const dx = e.clientX - startX;
-  const dy = e.clientY - startY;
-  const dragDist = Math.sqrt(dx*dx + dy*dy);
-  ball.classList.remove('dragging');
-  if(dragDist < MIN_DRAG){
-    ball.style.position = '';
-    ball.style.left = '';
-    ball.style.top = '';
-    ball.style.width = '';
-    ball.style.height = '';
-    dragState = null;
-    return;
+const toast = document.getElementById('toast');
+
+function buildPegs(){
+  document.querySelectorAll('.peg').forEach(p => p.remove());
+  const w = board.clientWidth;
+  const h = board.clientHeight;
+  const slotAreaH = h * 0.26;
+  const pegAreaH = h - slotAreaH - 30;
+  const rows = NUM_STEPS;
+  const slotW = w / NUM_SLOTS;
+  for(let r = 0; r < rows; r++){
+    const y = 40 + (pegAreaH / (rows + 1)) * (r + 1);
+    const even = r % 2 === 0;
+    const count = even ? NUM_SLOTS + 1 : NUM_SLOTS;
+    for(let c = 0; c < count; c++){
+      const x = even ? c * slotW : (c + 0.5) * slotW;
+      if(x < 4 || x > w - 4) continue;
+      const peg = document.createElement('div');
+      peg.className = 'peg';
+      peg.style.left = x + 'px';
+      peg.style.top = y + 'px';
+      board.appendChild(peg);
+    }
   }
-  const vx = -dx * POWER;
-  const vy = -dy * POWER;
-  launchBall(ball, slotRect, vx, vy);
-  dragState = null;
-});
-function launchBall(ball, originRect, vx, vy){
-  ball.classList.add('flying');
-  let x = originRect.left;
-  let y = originRect.top;
-  let velX = vx;
-  let velY = vy;
-  let scored = false;
-  let lastTime = performance.now();
-  const floorY = window.innerHeight + 100;
-  function frame(now){
-    const dt = Math.min((now - lastTime) / 1000, 0.032);
-    lastTime = now;
-    velY += GRAVITY * dt;
-    x += velX * dt;
-    y += velY * dt;
+}
+window.addEventListener('load', buildPegs);
+window.addEventListener('resize', buildPegs);
+
+function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+async function dropBall(){
+  if(dropping) return;
+  dropping = true;
+  dropBtn.classList.add('is-disabled');
+
+  const w = board.clientWidth;
+  const h = board.clientHeight;
+  const slotW = w / NUM_SLOTS;
+  const stepX = slotW / 2;
+  const slotAreaH = h * 0.26;
+  const pegAreaH = h - slotAreaH - 30;
+  const rows = NUM_STEPS;
+
+  let rights = 0;
+  const path = [];
+  for(let i = 0; i < NUM_STEPS; i++){
+    const goRight = Math.random() < 0.5;
+    path.push(goRight);
+    if(goRight) rights++;
+  }
+  const targetSlot = rights;
+
+  let x = w / 2;
+  let y = 20;
+  ball.style.display = '';
+  ball.style.left = x + 'px';
+  ball.style.top = y + 'px';
+  ball.style.transition = 'none';
+  await wait(30);
+  ball.style.transition = 'left .13s linear, top .13s linear';
+
+  for(let i = 0; i < rows; i++){
+    x += path[i] ? stepX : -stepX;
+    y = 40 + (pegAreaH / (rows + 1)) * (i + 1);
     ball.style.left = x + 'px';
     ball.style.top = y + 'px';
-    const hoopRect = hoop.getBoundingClientRect();
-    const scale = hoopRect.width / 210;
-    const ballCx = x + originRect.width/2;
-    const ballCy = y + originRect.height/2;
-    const hoopCx = hoopRect.left + hoopRect.width/2;
-    const hoopCy = hoopRect.top + 80*scale;
-    const distX = Math.abs(ballCx - hoopCx);
-    const distY = Math.abs(ballCy - hoopCy);
-    if(!scored && velY > 0 && distX < 66*scale && distY < 47*scale){
-      scored = true;
-      score(ball);
-      return;
-    }
-    if(y > floorY){
-      miss(ball, originRect);
-      return;
-    }
-    requestAnimationFrame(frame);
+    await wait(130);
   }
-  requestAnimationFrame(frame);
+  y = h - slotAreaH / 2;
+  ball.style.left = x + 'px';
+  ball.style.top = y + 'px';
+  await wait(150);
+
+  landInSlot(targetSlot);
 }
-function score(ball){
-  ball.style.transition = 'transform 0.2s, opacity 0.2s';
-  ball.style.transform = 'scale(0.3)';
-  ball.style.opacity = '0';
-  scoreFlash.textContent = 'Cesta!';
+
+function landInSlot(index){
+  const data = slotsData[index];
+  const slotEl = document.getElementById('slot-' + index);
+  slotEl.classList.add('pulse');
+  setTimeout(() => slotEl.classList.remove('pulse'), 600);
+
+  scoreFlash.innerHTML = `${data.icon} ${data.name}!`;
   scoreFlash.classList.add('show');
-  setTimeout(() => scoreFlash.classList.remove('show'), 700);
-  addToCart(ball.dataset.name, parseFloat(ball.dataset.price), ball.dataset.icon);
-  setTimeout(() => resetBall(ball), 250);
+  setTimeout(() => scoreFlash.classList.remove('show'), 900);
+
+  addToCart(data.name, data.price, data.icon);
+  showToast(`Adicionado: ${data.name}`);
+
+  setTimeout(() => {
+    ball.style.display = 'none';
+    dropping = false;
+    dropBtn.classList.remove('is-disabled');
+  }, 350);
 }
-function miss(ball, originRect){
-  ball.style.transition = 'opacity 0.25s';
-  ball.style.opacity = '0';
-  setTimeout(() => resetBall(ball), 250);
-}
-function resetBall(ball){
-  ball.classList.remove('flying');
-  ball.style.transition = '';
-  ball.style.transform = '';
-  ball.style.opacity = '';
-  ball.style.position = '';
-  ball.style.left = '';
-  ball.style.top = '';
-  ball.style.width = '';
-  ball.style.height = '';
-}
+
 function showToast(msg){
   toast.textContent = msg;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 1300);
+  setTimeout(() => toast.classList.remove('show'), 500);
 }
+
 function addToCart(name, price, icon){
   if(!cart[name]) cart[name] = { qty: 0, price, icon };
   cart[name].qty += 1;
   updateBadge();
   renderCart();
 }
+
 function changeQty(name, delta){
   if(!cart[name]) return;
   cart[name].qty += delta;
@@ -533,6 +917,7 @@ function changeQty(name, delta){
   updateBadge();
   renderCart();
 }
+
 function updateBadge(){
   const totalQty = Object.values(cart).reduce((s,i) => s + i.qty, 0);
   const totalValue = Object.values(cart).reduce((s,i) => s + i.qty * i.price, 0);
@@ -540,18 +925,18 @@ function updateBadge(){
   document.getElementById('mini-cart-count').textContent = totalQty;
   document.getElementById('mini-cart-value').textContent = 'R$ ' + totalValue.toFixed(2).replace('.', ',');
 }
+
 function renderCart(){
   const el = document.getElementById('cart-content');
   const items = Object.entries(cart);
   if(items.length === 0){
-    el.innerHTML = '<div class="empty-cart">Seu carrinho está vazio.<br>Volte ao catálogo para adicionar algo.</div>';
+    el.innerHTML = '<div class="empty-cart">Seu carrinho está vazio.<br>Volte para o Catálogo e solte a bola.</div>';
     return;
   }
-  let html = '<div class="cart-list">';
-  let total = 0;
+  const total = items.reduce((s, [, data]) => s + data.qty * data.price, 0);
+  let html = `<button class="checkout-btn" onclick="openRoulette()">Finalizar compra</button>`;
+  html += '<div class="cart-list">';
   items.forEach(([name, data]) => {
-    const subtotal = data.qty * data.price;
-    total += subtotal;
     html += `
       <div class="cart-item">
         <div class="cart-item-left">
@@ -562,7 +947,7 @@ function renderCart(){
           </div>
         </div>
         <div class="qty-controls">
-          <button class="qty-btn" onclick="changeQty('${name}', -1)">−</button>
+          <button class="qty-btn" onclick="tentarRemover('${name}')">−</button>
           <span>${data.qty}</span>
           <button class="qty-btn" onclick="changeQty('${name}', 1)">+</button>
         </div>
@@ -577,18 +962,287 @@ function renderCart(){
         <div class="total-value">R$ ${total.toFixed(2).replace('.',',')}</div>
       </div>
     </div>
-    <button class="checkout-btn" onclick="alert('Compra finalizada (simulação).')">Finalizar compra</button>
   `;
   el.innerHTML = html;
 }
+
+const productRows = [
+  slotsData.slice(0, 8),
+  slotsData.slice(8, 16)
+];
+const rowStart = [0, 0];
+
+function renderRow(rowIndex){
+  const items = productRows[rowIndex];
+  const start = rowStart[rowIndex];
+  const visible = [0, 1, 2, 3].map(i => items[(start + i) % items.length]);
+  const track = document.getElementById('row-' + rowIndex);
+  track.innerHTML = visible.map(p => `
+    <div class="product-card">
+      <div class="p-icon">${p.icon}</div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-price">R$ ${p.price.toFixed(2).replace('.', ',')}</div>
+    </div>
+  `).join('');
+}
+
+function advanceRow(rowIndex){
+  const items = productRows[rowIndex];
+  const maxStart = items.length - 4;
+  rowStart[rowIndex] = Math.min(rowStart[rowIndex] + 1, maxStart);
+  renderRow(rowIndex);
+}
+function renderProducts(){
+  renderRow(0);
+  renderRow(1);
+}
+
 function showView(view){
   document.getElementById('view-catalog').classList.toggle('active', view === 'catalog');
   document.getElementById('view-cart').classList.toggle('active', view === 'cart');
+  document.getElementById('view-products').classList.toggle('active', view === 'products');
   document.getElementById('nav-catalog').classList.toggle('active', view === 'catalog');
+  document.getElementById('nav-products').classList.toggle('active', view === 'products');
   document.getElementById('nav-cart').classList.toggle('active', view === 'cart');
-  hoop.style.display = view === 'catalog' ? '' : 'none';
   document.getElementById('mini-cart').style.display = view === 'catalog' ? '' : 'none';
   if(view === 'cart') renderCart();
+  if(view === 'products') renderProducts();
+}
+
+/* ---- ROLETA DE DESCONTOS ---- */
+const wheelSegments = [
+  { label: '5%',  discount: 0.05, color: '#FFB74D' },
+  { label: '0%',  discount: 0,    color: '#3A2E22' },
+  { label: '10%', discount: 0.10, color: '#D6483D' },
+  { label: '15%', discount: 0.15, color: '#FFB74D' },
+  { label: '0%',  discount: 0,    color: '#3A2E22' },
+  { label: '20%', discount: 0.20, color: '#D6483D' },
+  { label: '10%', discount: 0.10, color: '#FFB74D' },
+  { label: '25%', discount: 0.25, color: '#D6483D' }
+];
+const segAngle = 360 / wheelSegments.length;
+let wheelBuilt = false;
+let spinning = false;
+let currentRotation = 0;
+let pendingDiscount = 0;
+let checkoutTotal = 0;
+
+function buildWheel(){
+  const wheel = document.getElementById('wheel');
+  const stops = wheelSegments.map((s, i) =>
+    `${s.color} ${i * segAngle}deg ${(i + 1) * segAngle}deg`
+  ).join(', ');
+  wheel.style.background = `conic-gradient(from 0deg, ${stops})`;
+  wheel.innerHTML = wheelSegments.map((s, i) => {
+    const mid = i * segAngle + segAngle / 2;
+    return `<div class="wheel-label" style="transform:rotate(${mid}deg) translate(28px,-8px);">${s.label}</div>`;
+  }).join('');
+  wheelBuilt = true;
+}
+
+function openRoulette(){
+  if(!wheelBuilt) buildWheel();
+  checkoutTotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
+  spinning = false;
+  currentRotation = 0;
+  pendingDiscount = 0;
+  const wheel = document.getElementById('wheel');
+  wheel.style.transition = 'none';
+  wheel.style.transform = 'rotate(0deg)';
+  document.getElementById('roulette-result').textContent = '';
+  document.getElementById('spin-btn').style.display = '';
+  document.getElementById('spin-btn').disabled = false;
+  document.getElementById('confirm-purchase-btn').style.display = 'none';
+  document.getElementById('roulette-stage').style.display = 'block';
+  document.getElementById('success-stage').classList.remove('show');
+  document.getElementById('roulette-overlay').classList.add('show');
+}
+function closeRoulette(){
+  document.getElementById('roulette-overlay').classList.remove('show');
+}
+function spinWheel(){
+  if(spinning) return;
+  spinning = true;
+  document.getElementById('spin-btn').disabled = true;
+
+  const idx = Math.floor(Math.random() * wheelSegments.length);
+  const targetMid = idx * segAngle + segAngle / 2;
+  const extraSpins = 5 * 360;
+  currentRotation += extraSpins + (360 - targetMid);
+
+  const wheel = document.getElementById('wheel');
+  wheel.style.transition = 'transform 3.4s cubic-bezier(0.15,0.67,0.15,1)';
+  wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+  setTimeout(() => {
+    const seg = wheelSegments[idx];
+    pendingDiscount = seg.discount;
+    const resultEl = document.getElementById('roulette-result');
+    resultEl.textContent = seg.discount > 0
+      ? `🎉 Você ganhou ${seg.label} de desconto!`
+      : `😅 Não foi dessa vez — 0% de desconto.`;
+    document.getElementById('spin-btn').style.display = 'none';
+    document.getElementById('confirm-purchase-btn').style.display = 'block';
+  }, 3500);
+}
+function confirmPurchase(){
+  const finalTotal = checkoutTotal * (1 - pendingDiscount);
+  const orderId = '#' + Math.floor(10000 + Math.random() * 89999);
+
+  document.getElementById('success-order-id').textContent = orderId;
+  document.getElementById('success-subtotal').textContent =
+    'R$ ' + checkoutTotal.toFixed(2).replace('.', ',');
+  document.getElementById('success-discount').textContent =
+    pendingDiscount > 0 ? `-${(pendingDiscount * 100).toFixed(0)}%` : '—';
+  document.getElementById('success-total').textContent =
+    'R$ ' + finalTotal.toFixed(2).replace('.', ',');
+
+  document.getElementById('roulette-stage').style.display = 'none';
+  document.getElementById('success-stage').classList.add('show');
+
+  cart = {};
+  updateBadge();
+}
+
+/* ====================================================
+   LÓGICA DO BLACKJACK PARA REMOÇÃO DE ITEM 
+   ==================================================== */
+let playerMao = [];
+let dealerMao = [];
+let itemParaRemover = null;
+const baralho = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+function tentarRemover(nomeItem) {
+    itemParaRemover = nomeItem;
+    iniciarBlackjack();
+}
+
+function puxarCarta() {
+    return baralho[Math.floor(Math.random() * baralho.length)];
+}
+
+function calcularPontos(mao) {
+    let pontos = 0;
+    let ases = 0;
+    
+    for (let carta of mao) {
+        if (carta === 'A') {
+            pontos += 11;
+            ases += 1;
+        } else if (['J', 'Q', 'K'].includes(carta)) {
+            pontos += 10;
+        } else {
+            pontos += parseInt(carta);
+        }
+    }
+    
+    while (pontos > 21 && ases > 0) {
+        pontos -= 10;
+        ases -= 1;
+    }
+    
+    return pontos;
+}
+
+function iniciarBlackjack() {
+    document.getElementById('bj-overlay').classList.add('show');
+    document.getElementById('bj-controls').style.display = 'block';
+    document.getElementById('btn-bj-close').style.display = 'none';
+    document.getElementById('bj-msg').innerText = '';
+    
+    playerMao = [puxarCarta(), puxarCarta()];
+    dealerMao = [puxarCarta(), puxarCarta()]; 
+    
+    renderizarMesa(false); 
+    
+    if (calcularPontos(playerMao) === 21) {
+        bjParar();
+    }
+}
+
+function renderizarMesa(revelarDealer) {
+    const divPlayerCards = document.getElementById('bj-player-cards');
+    divPlayerCards.innerHTML = '';
+    playerMao.forEach(carta => {
+        divPlayerCards.innerHTML += `<div class="bj-carta">${carta}</div>`;
+    });
+    document.getElementById('bj-player-score').innerText = calcularPontos(playerMao);
+
+    const divDealerCards = document.getElementById('bj-dealer-cards');
+    divDealerCards.innerHTML = '';
+    
+    if (revelarDealer) {
+        dealerMao.forEach(carta => {
+            divDealerCards.innerHTML += `<div class="bj-carta">${carta}</div>`;
+        });
+        document.getElementById('bj-dealer-score').innerText = calcularPontos(dealerMao);
+    } else {
+        divDealerCards.innerHTML += `<div class="bj-carta">${dealerMao[0]}</div>`;
+        divDealerCards.innerHTML += `<div class="bj-carta oculta">?</div>`;
+        document.getElementById('bj-dealer-score').innerText = "??"; 
+    }
+}
+
+function bjComprarCarta() {
+    playerMao.push(puxarCarta());
+    renderizarMesa(false);
+    
+    const pontos = calcularPontos(playerMao);
+    if (pontos > 21) {
+        renderizarMesa(true); 
+        finalizarBj(false, "💥 Você estourou (passou de 21)! Perdeu.");
+    } else if (pontos === 21) {
+        bjParar(); 
+    }
+}
+
+function bjParar() {
+    renderizarMesa(true);
+    
+    // Pequeno timeout para dar suspense antes do dealer jogar
+    setTimeout(() => {
+        while (calcularPontos(dealerMao) < 17) {
+            dealerMao.push(puxarCarta());
+        }
+        renderizarMesa(true); 
+        verificarFimDeJogo();
+    }, 500);
+}
+
+function verificarFimDeJogo() {
+    const pontosPlayer = calcularPontos(playerMao);
+    const pontosDealer = calcularPontos(dealerMao);
+    
+    if (pontosDealer > 21) {
+        finalizarBj(true, "🎉 O site estourou! Você ganhou.");
+    } else if (pontosPlayer > pontosDealer) {
+        finalizarBj(true, "🏆 Você fez mais pontos! Ganhou.");
+    } else if (pontosPlayer < pontosDealer) {
+        finalizarBj(false, "💔 O site fez mais pontos! Você perdeu.");
+    } else {
+        finalizarBj(false, "😤 Empate! A casa sempre vence no empate.");
+    }
+}
+
+function finalizarBj(vitoria, msg) {
+    document.getElementById('bj-controls').style.display = 'none';
+    document.getElementById('btn-bj-close').style.display = 'inline-block';
+    document.getElementById('bj-msg').innerText = msg;
+    document.getElementById('bj-msg').style.color = vitoria ? "var(--lime)" : "var(--coral)";
+    
+    if (vitoria) {
+        changeQty(itemParaRemover, -1);
+    } else {
+        for (let key in cart) {
+            cart[key].qty += 1;
+        }
+        updateBadge();
+        renderCart();
+    }
+}
+
+function fecharModalBj() {
+    document.getElementById('bj-overlay').classList.remove('show');
 }
 </script>
 </body>
